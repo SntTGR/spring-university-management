@@ -1,9 +1,7 @@
 package snttgr.alkemy.challenge.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import snttgr.alkemy.challenge.model.Student;
 import snttgr.alkemy.challenge.services.StudentService;
 
@@ -24,5 +22,10 @@ public class UserController {
     @GetMapping
     public List<Student> students(){
         return studentService.getStudents();
+    }
+
+    @PostMapping
+    public void newStudent(@RequestBody Student student){
+        studentService.saveStudent(student);
     }
 }
