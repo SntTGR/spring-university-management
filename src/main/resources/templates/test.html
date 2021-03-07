@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title th:text="${name}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p th:text="'Hello, ' + ${name} + '!'"></p>
+    <table>
+        <thead>
+            <tr>
+                <th>ClassId</th>
+                <th>ClassName</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="class : ${classes}">
+                <td th:text="${class.getId()}"></td>
+                <td th:text="${class.getName()}"></td>
+                <td>
+                    <div th:switch="${class.isEnrolled(studentId)}">
+                        <div th:case="true">
+                            <form method="GET" th:action="@{'/user/' + ${studentId} + '/unenroll/' + ${class.getId()}}">
+                                <input type = "submit" value = "Unenroll"/>
+                            </form>
+                        </div>
+                        <div th:case="false">
+                            <form method="GET" th:action="@{'/user/' + ${studentId} + '/enroll/' + ${class.getId()}}">
+                                <input type = "submit" value = "Enroll"/>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+                <td th:text="${class.getTickets() + ' tickets left.'}">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,5 +1,7 @@
 package snttgr.alkemy.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 )
 public class Student {
 
+    //TODO Generator should be separate
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(
@@ -21,10 +25,12 @@ public class Student {
     )
     private Long id;
 
+
     @Column(name = "dni",
             nullable = false)
     private Integer dni;
 
+    //TODO: Should add non blank
     @Column(
             nullable = false,
             columnDefinition = "TEXT"
@@ -40,6 +46,7 @@ public class Student {
     /*@ManyToMany(mappedBy = "enrolledStudents",
                 cascade = CascadeType.ALL,
                 fetch = FetchType.EAGER)*/
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "student_class",
@@ -102,6 +109,20 @@ public class Student {
         c.getEnrolledStudents().add(this);
     }
 
+    public void removeClass(SchoolClass classById) {
+
+        for (var schoolClass : classes) {
+            if (schoolClass.getId().equals(classById.getId())){
+
+                schoolClass.getEnrolledStudents().removeIf(student -> student.getId().equals(this.getId()));
+
+                classes.remove(schoolClass);
+                break;
+            }
+        }
+    }
+
+
     @Override
     public String toString() {
         return "Student{" +
@@ -110,4 +131,5 @@ public class Student {
                 ", name='" + name + '\'' +
                 '}';
     }
+
 }

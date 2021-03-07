@@ -22,9 +22,11 @@ public class StudentService {
 
 
     //TODO: Cleanup
-    public List<Student> getStudents(){
+    public List<Student> findStudents(){
         return studentRepository.findAll();
     }
+    //TODO: Exception checking
+    public Student findById(Long id){ return studentRepository.findById(id).get(); }
 
     public void saveStudent(Student student){
         studentRepository.save(student);

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin landing</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>ClassId</th>
+        <th>ClassName</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="class : ${classes}">
+        <td th:text="${class.getId()}"></td>
+        <td th:text="${class.getName()}"></td>
+        <td th:text="${class.getTickets()} + '/' + ${class.getMaxTickets()}"></td>
+        <td th:text="${class.getProfessor() != null} ? ${class.getProfessor().getName()} + '(id:' + ${class.getProfessor().getId()} + ')' : 'Inactive.'"></td>
+        <td th:text="${class.getStartTime()}"></td>
+        <td>
+            <a th:href="@{'/admin/classes/edit/' + ${class.getId()}}">Edit</a>
+            <a th:href="@{'/admin/classes/delete/' + ${class.getId()}}">Delete</a>
+            <a th:href="@{'/admin/classes/assign/' + ${class.getId()}}">Assign</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

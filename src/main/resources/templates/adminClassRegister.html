@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>Create New Product</title>
+</head>
+<body>
+<div align="center">
+    <h1 th:text="${operation}"></h1>
+    <br />
+    <form  action="#" th:action="@{/admin/classes/save}" th:object="${schoolClass}" method="post">
+        <table>
+            <tr>
+                <td>Class#:</td>
+                <td><input type="number" th:field="*{id}" readonly="readonly"/></td>
+            </tr>
+            <tr>
+                <td>Name:</td>
+                <td><input type="text" th:field="*{name}" /></td>
+            </tr>
+            <tr>
+                <td>Time:</td>
+                <td><input type="time" th:field="*{startTime}" /></td>
+            </tr>
+            <tr>
+                <td>Tickets:</td>
+                <td><input type="number" th:field="*{maxTickets}" /></td>
+            </tr>
+            <tr>
+                <td><button type="submit">Save</button> </td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>

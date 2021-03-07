@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Professors</title>
+</head>
+<body>
+<h1>Professors</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ProfRecord#</th>
+        <th>First Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a th:href="@{'/admin/classes/assign/' + ${classId} + '/0'}">Unassign</a></td>
+    </tr>
+    <tr th:each="professor : ${professors}">
+        <td th:text="${professor.getId()}"></td>
+        <td th:text="${professor.getName()}"></td>
+        <td th:text="${ professor.getAsignedClasses().size() > 0 ? professor.getAsignedClasses() : 'Inactive'}"></td>
+
+        <td><a th:href="@{'/admin/classes/assign/' + ${classId} + '/' + ${professor.getId()}}">Assign</a>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

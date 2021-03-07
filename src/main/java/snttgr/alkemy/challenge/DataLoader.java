@@ -1,6 +1,9 @@
 package snttgr.alkemy.challenge;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import snttgr.alkemy.challenge.model.Professor;
 import snttgr.alkemy.challenge.model.SchoolClass;
@@ -9,14 +12,18 @@ import snttgr.alkemy.challenge.repository.ProfessorRepository;
 import snttgr.alkemy.challenge.repository.SchoolClassRepository;
 import snttgr.alkemy.challenge.repository.StudentRepository;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 
-@Component
+@Configuration
 public class DataLoader {
 
 
@@ -31,77 +38,86 @@ public class DataLoader {
         this.professorRepository = professorRepository;
     }
 
+    private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
 
-    @PostConstruct
-    public void loadData(){
-        studentRepository.saveAll(
-                List.of(
-                        new Student(123,"Santiago", "Nobili"),
-                        new Student(321,"Alejo", "Lastra"),
-                        new Student(512,"Ber", "Nande")));
-
-
-        schoolClassRepository.saveAll(
-                List.of(
-                        new SchoolClass("Intro to circuit design", LocalTime.MIDNIGHT, 10),
-                        new SchoolClass("Advanced circuit design", LocalTime.NOON, 20)));
-
-
-        professorRepository.saveAll(
-                List.of(
-                        new Professor(999,"Jorge","Doe")));
+    @Bean
+    CommandLineRunner initDatabase() {
+        return args -> {
 
 
 
-        Professor profTest = professorRepository.findAll().get(0);
-        SchoolClass testClass = new SchoolClass("Pipo 101", LocalTime.now(), 5);
-        testClass.setProfessor(profTest);
-        SchoolClass testClass2 = new SchoolClass("Pipo 102", LocalTime.now(), 10);
-        testClass2.setProfessor(profTest);
+            studentRepository.saveAll(
+                    List.of(
+                            new Student(123, "Santiago", "Nobili"),
+                            new Student(321, "Alejo", "Lastra"),
+                            new Student(512, "Ber", "Nande")));
 
-        schoolClassRepository.saveAll(List.of(testClass, testClass2));
 
-        System.out.println("-------------------------------------");
+            schoolClassRepository.saveAll(
+                    List.of(
+                            new SchoolClass("Intro to circuit design", LocalTime.MIDNIGHT, 10),
+                            new SchoolClass("Advanced circuit design", LocalTime.NOON, 20)));
 
-        Optional<Professor> profCheck = Optional.ofNullable(professorRepository.findAll().get(0));
-        List<SchoolClass> classesCheck = (schoolClassRepository.findAll());
 
-        if(profCheck.isPresent() && !classesCheck.isEmpty()){
-            System.out.println(profCheck.get() + "is teaching in: " + profCheck.get().getAsignedClasses());
+            professorRepository.saveAll(
+                    List.of(
+                            new Professor(999, "Jorge", "Doe")));
 
-            for (var schoolclass: classesCheck) {
-                System.out.println(schoolclass + "being teached by: " + schoolclass.getProfessor());
+
+            Professor profTest = professorRepository.findAll().get(0);
+            SchoolClass testClass = new SchoolClass("Code golf 101", LocalTime.now(), 5);
+            testClass.setProfessor(profTest);
+            SchoolClass testClass2 = new SchoolClass("Code golf 102", LocalTime.now(), 10);
+            testClass2.setProfessor(profTest);
+
+            schoolClassRepository.saveAll(List.of(testClass, testClass2));
+
+            log.debug("-------------------------------------");
+
+            Optional<Professor> profCheck = Optional.ofNullable(professorRepository.findAll().get(0));
+            List<SchoolClass> classesCheck = (schoolClassRepository.findAll());
+
+            if (profCheck.isPresent() && !classesCheck.isEmpty()) {
+                log.debug(profCheck.get() + "is teaching in: " + profCheck.get().getAsignedClasses());
+
+                for (var schoolClass : classesCheck) {
+                    log.debug(schoolClass + "being taught by: " + schoolClass.getProfessor());
+                }
             }
-        }
 
-        System.out.println("-------------------------------------");
-
-
-        Student student1 = studentRepository.findAll().get(0);
-        Student student2 = studentRepository.findAll().get(1);
-        Student student3 = studentRepository.findAll().get(2);
+            log.debug("-------------------------------------");
 
 
-        student1.addClass(new SchoolClass("Bikesheding", LocalTime.MIDNIGHT, 1));
-        student2.addClass(new SchoolClass("Computers", LocalTime.MIDNIGHT, 2));
+            Student student1 = studentRepository.findAll().get(0);
+            Student student2 = studentRepository.findAll().get(1);
+            Student student3 = studentRepository.findAll().get(2);
 
 
-        student2.addClass(testClass);
-        student2.addClass(testClass2);
 
-        student3.addClass(testClass);
+            student1.addClass(new SchoolClass("Bikeshedding", LocalTime.MIDNIGHT, 1));
 
-        studentRepository.saveAll(List.of(student1, student2, student3));
+            //TODO: Why is this producing a duplicate class
+            //student2.addClass(new SchoolClass("Computer", LocalTime.MIDNIGHT, 2));
 
-        System.out.println("-------------------------------------");
 
-        for (var student: studentRepository.findAll()) {
-            System.out.println(student + "is enrolled in " + student.getClasses());
-        }
+            student2.addClass(testClass);
+            student2.addClass(testClass2);
 
-        System.out.println(testClass2 + " has enrolled : " + testClass2.getEnrolledStudents());
-        System.out.println(testClass + " has enrolled : " + testClass.getEnrolledStudents());
+            student3.addClass(testClass);
 
-        //TODO: Persistence and Entity management is still a bit shaky, should read more
+            studentRepository.saveAll(List.of(student1, student2, student3));
+
+            log.debug("-------------------------------------");
+
+            for (var student : studentRepository.findAll()) {
+                log.debug(student + "is enrolled in " + student.getClasses());
+            }
+
+
+            log.debug(testClass2 + " has enrolled : " + testClass2.getEnrolledStudents());
+            log.debug(testClass + " has enrolled : " + testClass.getEnrolledStudents());
+
+            //TODO: Persistence and Entity management is still a bit shaky, should read more
+        };
     }
 }
