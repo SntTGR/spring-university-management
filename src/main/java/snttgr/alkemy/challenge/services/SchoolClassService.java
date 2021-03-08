@@ -7,11 +7,10 @@ import snttgr.alkemy.challenge.model.SchoolClass;
 import snttgr.alkemy.challenge.repository.SchoolClassRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class SchoolClassService {
-
-    //TODO: Exceptions
 
 
     private final SchoolClassRepository schoolClassRepository;
@@ -26,17 +25,15 @@ public class SchoolClassService {
         return schoolClassRepository.findAll();
     }
 
-    //TODO: HANDLE EXCEPTIONS
-    public SchoolClass findClassById(Long id) { return schoolClassRepository.findById(id).get(); }
+
+    public SchoolClass findClassById(Long id) throws NoSuchElementException { return schoolClassRepository.findById(id).orElseThrow(() -> new NoSuchElementException("schoolClass with id:"+id+" not found in database")); }
     public List<SchoolClass> findClassesSorted() { return schoolClassRepository.findAllByOrderByName(); }
     public List<SchoolClass> getActiveClassesSorted() { return schoolClassRepository.findAllByWhereProfessorIdIsNotNullOrderByNameDesc(); }
-    public List<SchoolClass> getActiveClasses(){
-        return null;
-    }
+
     public void save(SchoolClass formSchoolClass) {
         schoolClassRepository.save(formSchoolClass);
     }
-    public void deleteById(Long classId) {
+    public void deleteById(Long classId) throws NoSuchElementException {
         SchoolClass toDelete = findClassById(classId);
 
         if (toDelete.getProfessor() != null) {

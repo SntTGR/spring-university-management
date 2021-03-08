@@ -5,8 +5,12 @@
     <title>Admin landing</title>
 </head>
 <body>
+<a th:href="@{/admin/professors}">professors</a>
+<h1>Classes</h1>
+<a th:href="@{/admin/classes/add}">add class</a>
 <table>
     <thead>
+
     <tr>
         <th>ClassId</th>
         <th>ClassName</th>
@@ -27,6 +31,8 @@
     </tr>
     </tbody>
 </table>
-
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out">
+</form>
 </body>
 </html>

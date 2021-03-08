@@ -4,31 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import snttgr.alkemy.challenge.model.Student;
 
-import snttgr.alkemy.challenge.Application;
+
 import snttgr.alkemy.challenge.repository.StudentRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service //bean component
 public class StudentService {
 
 
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
-
-    //TODO: Cleanup
-    public List<Student> findStudents(){
-        return studentRepository.findAll();
-    }
-    //TODO: Exception checking
-    public Student findById(Long id){ return studentRepository.findById(id).get(); }
-
-    public void saveStudent(Student student){
-        studentRepository.save(student);
-    }
+    public List<Student> findStudents(){ return studentRepository.findAll(); }
+    public Student findById(Long id) throws NoSuchElementException{ return studentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("student with record:"+id+" not found in database")); }
+    public void saveStudent(Student student){ studentRepository.save(student); }
 }

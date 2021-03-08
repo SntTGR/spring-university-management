@@ -5,7 +5,9 @@
     <title>Professors</title>
 </head>
 <body>
+<a th:href="@{/admin/classes}">classes</a>
 <h1>Professors</h1>
+<a th:href="@{/admin/professors/add}">add professor</a>
 <table>
     <thead>
     <tr>
@@ -16,8 +18,8 @@
     <tbody>
     <tr th:each="professor : ${professors}">
         <td th:text="${professor.getId()}"></td>
-        <td th:text="${professor.getName()}"></td>
-        <td th:text="${ professor.getAsignedClasses().size() > 0 ? professor.getAsignedClasses() : 'Inactive'}"></td>
+        <td th:text="${professor.getName() + ' ' + professor.getSurname()} "></td>
+        <td th:text="${ professor.getAssignedClasses().size() > 0 ? professor.getAssignedClasses() : 'Inactive'}"></td>
 
         <td><a th:href="@{'/admin/professors/edit/' + ${professor.getId()}}">Edit</a>
             <a th:href="@{'/admin/professors/delete/' + ${professor.getId()}}">Delete</a>
@@ -25,6 +27,8 @@
     </tr>
     </tbody>
 </table>
-
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out">
+</form>
 </body>
 </html>

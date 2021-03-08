@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +12,25 @@ import java.util.List;
 public class SchoolClass {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @SequenceGenerator(
+            name="class_sequence",
+            sequenceName = "class_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy=GenerationType.SEQUENCE,
+            generator = "class_sequence"
+    )
+    @Column(
+            name="id",
+            updatable = false
+    )
     private Long id;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
+
+    @Column(nullable = false)
     private LocalTime startTime;
 
     @JsonIgnore
@@ -24,27 +38,25 @@ public class SchoolClass {
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
-    /*@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "enrolled_students",
-            joinColumns = @JoinColumn(name = "class_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_record_number")
-    )*/
+
     @JsonIgnore
     @ManyToMany(mappedBy = "classes",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.EAGER)
     private List<Student> enrolledStudents = new ArrayList<>();
 
-    @Transient //should be transient?
-    private int tickets;
-
+    @Column(nullable = false)
     private int maxTickets;
 
     public SchoolClass() {
     }
-
     public SchoolClass(String name, LocalTime startTime, int maxTickets) {
+        this.name = name;
+        this.startTime = startTime;
+        this.maxTickets = maxTickets;
+    }
+    public SchoolClass(Long id, String name, LocalTime startTime, int maxTickets) {
+        this.id = id;
         this.name = name;
         this.startTime = startTime;
         this.maxTickets = maxTickets;
@@ -101,11 +113,10 @@ public class SchoolClass {
     public void setEnrolledStudents(List<Student> enrolledStudents) {
         this.enrolledStudents = enrolledStudents;
     }
-    /*public void addEnrolledStudent(Student enrolledStudent)
-    {
+    public void addEnrolledStudent(Student enrolledStudent) {
         enrolledStudents.add(enrolledStudent);
         enrolledStudent.getClasses().add(this);
-    }*/
+    }
 
     @Override
     public String toString() {
@@ -116,7 +127,7 @@ public class SchoolClass {
     }
 
     public void removeProfessor() {
-        getProfessor().getAsignedClasses().removeIf(schoolClass -> schoolClass.getId().equals(this.getId()));
+        getProfessor().getAssignedClasses().removeIf(schoolClass -> schoolClass.getId().equals(this.getId()));
         this.professor = null;
     }
     public void removeStudents() {

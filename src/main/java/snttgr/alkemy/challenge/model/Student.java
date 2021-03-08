@@ -1,6 +1,8 @@
 package snttgr.alkemy.challenge.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import snttgr.alkemy.challenge.exceptions.InvalidRequestException;
+
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,10 +17,17 @@ import java.util.List;
 )
 public class Student {
 
-    //TODO Generator should be separate
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @SequenceGenerator(
+            name="student_sequence",
+            sequenceName = "student_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy=GenerationType.SEQUENCE,
+            generator = "student_sequence"
+    )
     @Column(
             name="record_number",
             updatable = false
@@ -30,7 +39,7 @@ public class Student {
             nullable = false)
     private Integer dni;
 
-    //TODO: Should add non blank
+
     @Column(
             nullable = false,
             columnDefinition = "TEXT"
@@ -46,6 +55,7 @@ public class Student {
     /*@ManyToMany(mappedBy = "enrolledStudents",
                 cascade = CascadeType.ALL,
                 fetch = FetchType.EAGER)*/
+    @Column(nullable = false)
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
@@ -58,13 +68,11 @@ public class Student {
 
     public Student() {
     }
-
     public Student(int dni, String name, String surname) {
         this.dni = dni;
         this.name = name;
         this.surname = surname;
     }
-
     public Student(Long id, int dni, String name, String surname) {
         this.id = id;
         this.dni = dni;
@@ -104,16 +112,17 @@ public class Student {
         this.classes = classes;
     }
 
-    public void addClass(SchoolClass c){
+    public boolean isEnrollable(SchoolClass c){
+        return c.getTickets() > 0 && getClasses().stream().noneMatch(schoolClass -> schoolClass.getStartTime().equals(c.getStartTime()));
+    }
+    public void addClass(SchoolClass c) throws InvalidRequestException {
+        if(c.isEnrolled(id)) throw new InvalidRequestException("Student cant enroll in this class");
         classes.add(c);
         c.getEnrolledStudents().add(this);
     }
-
     public void removeClass(SchoolClass classById) {
-
         for (var schoolClass : classes) {
             if (schoolClass.getId().equals(classById.getId())){
-
                 schoolClass.getEnrolledStudents().removeIf(student -> student.getId().equals(this.getId()));
 
                 classes.remove(schoolClass);

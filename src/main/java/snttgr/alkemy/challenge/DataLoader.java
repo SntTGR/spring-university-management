@@ -4,7 +4,6 @@ package snttgr.alkemy.challenge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import snttgr.alkemy.challenge.model.Professor;
 import snttgr.alkemy.challenge.model.SchoolClass;
 import snttgr.alkemy.challenge.model.Student;
@@ -19,8 +18,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
@@ -78,7 +75,7 @@ public class DataLoader {
             List<SchoolClass> classesCheck = (schoolClassRepository.findAll());
 
             if (profCheck.isPresent() && !classesCheck.isEmpty()) {
-                log.debug(profCheck.get() + "is teaching in: " + profCheck.get().getAsignedClasses());
+                log.debug(profCheck.get() + "is teaching in: " + profCheck.get().getAssignedClasses());
 
                 for (var schoolClass : classesCheck) {
                     log.debug(schoolClass + "being taught by: " + schoolClass.getProfessor());
@@ -96,7 +93,7 @@ public class DataLoader {
 
             student1.addClass(new SchoolClass("Bikeshedding", LocalTime.MIDNIGHT, 1));
 
-            //TODO: Why is this producing a duplicate class
+            //NOTE: Why is this producing a duplicate class
             //student2.addClass(new SchoolClass("Computer", LocalTime.MIDNIGHT, 2));
 
 
@@ -117,7 +114,7 @@ public class DataLoader {
             log.debug(testClass2 + " has enrolled : " + testClass2.getEnrolledStudents());
             log.debug(testClass + " has enrolled : " + testClass.getEnrolledStudents());
 
-            //TODO: Persistence and Entity management is still a bit shaky, should read more
+            //NOTE: Persistence and Entity management is still a bit shaky, should read more
         };
     }
 }

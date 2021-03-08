@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import snttgr.alkemy.challenge.exceptions.InvalidRequestException;
 import snttgr.alkemy.challenge.model.Professor;
 import snttgr.alkemy.challenge.model.SchoolClass;
-import snttgr.alkemy.challenge.repository.ProfessorRepository;
 import snttgr.alkemy.challenge.services.ProfessorService;
 import snttgr.alkemy.challenge.services.SchoolClassService;
 
@@ -24,6 +24,11 @@ public class AdminController {
     public AdminController(SchoolClassService schoolClassService, ProfessorService professorService) {
         this.schoolClassService = schoolClassService;
         this.professorService = professorService;
+    }
+
+    @GetMapping()
+    public String redirectToClasses(){
+        return "redirect:/admin/classes";
     }
 
     @GetMapping("/classes")
@@ -51,26 +56,25 @@ public class AdminController {
         return "adminClassRegister";
     }
 
+
     @PostMapping("/classes/save")
-    public String saveClass(@ModelAttribute("schoolClass") SchoolClass formSchoolClass){
+    public String saveClass(@ModelAttribute("schoolClass") SchoolClass formSchoolClass) throws InvalidRequestException {
+        //only validation check is if they are not blank and not null
+        if( formSchoolClass.getStartTime()  == null ||
+            formSchoolClass.getName()       == null ||
+            formSchoolClass.getName().isBlank()) throw new InvalidRequestException("School class invalid form");
 
         if (formSchoolClass.getId() != null) {
             formSchoolClass.setProfessor(schoolClassService.findClassById(formSchoolClass.getId()).getProfessor());
         }
 
         schoolClassService.save(formSchoolClass);
-
         return "redirect:/admin/classes";
     }
 
     @GetMapping("/classes/delete/{classId}")
     public String deleteClass(@PathVariable Long classId){
-
-
-        //TODO: Remember to check if professors get deleted
-
         schoolClassService.deleteById(classId);
-
         return "redirect:/admin/classes";
     }
 
@@ -82,7 +86,6 @@ public class AdminController {
 
     @GetMapping("/classes/assign/{classId}/{professorId}")
     public String assignClassProfessor(@PathVariable Long classId, @PathVariable Long professorId){
-
 
         SchoolClass schoolClass = schoolClassService.findClassById(classId);
 
@@ -96,9 +99,6 @@ public class AdminController {
         schoolClassService.save(schoolClass);
         return "redirect:/admin/classes";
     }
-
-
-
 
 
 
@@ -132,12 +132,21 @@ public class AdminController {
         return "adminProfessorRegister";
     }
 
+
+
     @PostMapping("/professors/save")
-    public String saveProfessor(@ModelAttribute("professor") Professor formProfessor){
+    public String saveProfessor(@ModelAttribute("professor") Professor formProfessor) throws InvalidRequestException{
+
+        //only validation check is if they are not blank and not null
+        if( formProfessor.getSurname()      == null ||
+            formProfessor.getSurname().isBlank()    ||
+            formProfessor.getName()         == null ||
+            formProfessor.getName().isBlank())
+                throw new InvalidRequestException("Professor invalid form");
 
 
         if (formProfessor.getId() != null) {
-            formProfessor.setAsignedClasses(professorService.findById(formProfessor.getId()).getAsignedClasses());
+            formProfessor.setAssignedClasses(professorService.findById(formProfessor.getId()).getAssignedClasses());
         }
 
         //System.out.println(toSave + " - " + formProfessor);
@@ -151,7 +160,7 @@ public class AdminController {
     public String deleteProfessor(@PathVariable Long professorId){
 
 
-        List<SchoolClass> classes = professorService.findById(professorId).getAsignedClasses();
+        List<SchoolClass> classes = professorService.findById(professorId).getAssignedClasses();
         for (var schoolClass : classes) {
             schoolClass.setProfessor(null);
         }

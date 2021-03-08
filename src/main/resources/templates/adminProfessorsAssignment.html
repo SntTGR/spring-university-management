@@ -22,8 +22,8 @@
     </tr>
     <tr th:each="professor : ${professors}">
         <td th:text="${professor.getId()}"></td>
-        <td th:text="${professor.getName()}"></td>
-        <td th:text="${ professor.getAsignedClasses().size() > 0 ? professor.getAsignedClasses() : 'Inactive'}"></td>
+        <td th:text="${professor.getName() + ' ' + professor.getSurname()} "></td>
+        <td th:text="${ professor.getAssignedClasses().size() > 0 ? professor.getAssignedClasses() : 'Inactive'}"></td>
 
         <td><a th:href="@{'/admin/classes/assign/' + ${classId} + '/' + ${professor.getId()}}">Assign</a>
 

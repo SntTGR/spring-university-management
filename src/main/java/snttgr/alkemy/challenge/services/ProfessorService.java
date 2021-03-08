@@ -6,6 +6,7 @@ import snttgr.alkemy.challenge.model.Professor;
 import snttgr.alkemy.challenge.repository.ProfessorRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProfessorService {
@@ -26,12 +27,13 @@ public class ProfessorService {
         professorRepository.save(professor);
     }
 
-    //TODO: Exceptions
-    public Professor findById(Long id){
-        return professorRepository.findById(id).get();
+
+    public Professor findById(Long id) throws NoSuchElementException {
+        return professorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("professor with id:"+id+" not found in database"));
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) throws NoSuchElementException {
+        if (!professorRepository.existsById(id)) throw new NoSuchElementException("professor with id:"+id+" not found in database");
         professorRepository.deleteById(id);
     }
 }

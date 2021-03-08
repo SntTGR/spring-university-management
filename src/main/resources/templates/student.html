@@ -18,15 +18,17 @@
                 <td th:text="${class.getId()}"></td>
                 <td th:text="${class.getName()}"></td>
                 <td>
-                    <div th:switch="${class.isEnrolled(studentId)}">
+                    <div th:switch="${class.isEnrolled(student.getId())}">
                         <div th:case="true">
-                            <form method="GET" th:action="@{'/user/' + ${studentId} + '/unenroll/' + ${class.getId()}}">
+                            <form method="GET" th:action="@{'/user/unenroll/' + ${class.getId()}}">
                                 <input type = "submit" value = "Unenroll"/>
                             </form>
                         </div>
                         <div th:case="false">
-                            <form method="GET" th:action="@{'/user/' + ${studentId} + '/enroll/' + ${class.getId()}}">
-                                <input type = "submit" value = "Enroll"/>
+                            <form method="GET" th:action="@{'/user/enroll/' + ${class.getId()}}">
+                                <div th:if="${student.isEnrollable(class)}">
+                                    <input type = "submit" value = "Enroll"/>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -36,5 +38,9 @@
             </tr>
         </tbody>
     </table>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out">
+    </form>
+
 </body>
 </html>
