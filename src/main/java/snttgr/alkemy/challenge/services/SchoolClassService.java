@@ -4,7 +4,7 @@ package snttgr.alkemy.challenge.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import snttgr.alkemy.challenge.model.SchoolClass;
-import snttgr.alkemy.challenge.repository.SchoolClassRepository;
+import snttgr.alkemy.challenge.model.repository.SchoolClassRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

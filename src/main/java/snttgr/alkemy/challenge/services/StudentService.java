@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import snttgr.alkemy.challenge.model.Student;
 
 
-import snttgr.alkemy.challenge.repository.StudentRepository;
+import snttgr.alkemy.challenge.model.repository.StudentRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;

@@ -19,7 +19,7 @@ public class SnASecurityConfig extends WebSecurityConfigurerAdapter {
     private SnAAuthenticationProvider snAAuthenticationProvider;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(snAAuthenticationProvider);
     }
 
@@ -28,7 +28,7 @@ public class SnASecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
                     .antMatchers("/").permitAll()
-                    .antMatchers("/login/success").hasAnyRole("USER","ADMIN")
+                    .antMatchers("/login/success").authenticated()
                     .antMatchers("/user/**").hasRole("USER")
                     .antMatchers("/admin/**").hasRole("ADMIN")
 

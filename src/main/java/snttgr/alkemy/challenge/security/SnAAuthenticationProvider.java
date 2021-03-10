@@ -31,7 +31,7 @@ public class SnAAuthenticationProvider implements AuthenticationProvider {
     private static final List<String> adminPasswords = List.of(
             passwordEncoder().encode("admin"),
             passwordEncoder().encode("foo"),
-            passwordEncoder().encode("bar")
+            passwordEncoder().encode("root")
     );
 
 

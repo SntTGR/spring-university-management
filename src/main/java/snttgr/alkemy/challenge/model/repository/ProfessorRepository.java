@@ -1,4 +1,4 @@
-package snttgr.alkemy.challenge.repository;
+package snttgr.alkemy.challenge.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

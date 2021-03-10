@@ -32,17 +32,14 @@ public class UserController {
         this.schoolClassService = schoolClassService;
     }
 
-    //TODO: Dropdown for class description
-
     @GetMapping
     public String greetStudent(Model model, Authentication authentication){
         //Greet student by name
         Student studentInSession = studentService.findById(Long.parseLong(authentication.getName()));
 
         model.addAttribute("student", studentInSession);
-        model.addAttribute("name",studentInSession.getName());
         model.addAttribute("classes", schoolClassService.getActiveClassesSorted());
-        return "student";
+        return "studentPage";
     }
 
 

@@ -25,7 +25,7 @@ public class Professor {
 
 
     @Column(name = "dni", nullable = false)
-    private int dni;
+    private Integer dni;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String name;
@@ -44,12 +44,12 @@ public class Professor {
 
     public Professor() {
     }
-    public Professor(int dni, String name, String surname) {
+    public Professor(Integer dni, String name, String surname) {
         this.dni = dni;
         this.name = name;
         this.surname = surname;
     }
-    public Professor(Long id, int dni, String name, String surname) {
+    public Professor(Long id, Integer dni, String name, String surname) {
         this.id = id;
         this.dni = dni;
         this.name = name;
@@ -61,7 +61,7 @@ public class Professor {
     public Long getId() {
         return id;
     }
-    public int getDni() {
+    public Integer getDni() {
         return dni;
     }
     public String getName() {
@@ -80,7 +80,7 @@ public class Professor {
     public void setId(Long id) {
         this.id = id;
     }
-    public void setDni(int dni) {
+    public void setDni(Integer dni) {
         this.dni = dni;
     }
     public void setName(String name) {

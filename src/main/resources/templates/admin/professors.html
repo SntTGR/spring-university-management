@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:replace="fragments/header.html :: headerfiles"></th:block>
+
+    <title>Professors</title>
+</head>
+
+
+<style>
+
+    #id{
+        width:3em;
+        border:0;
+        text-align: center;
+    }
+    .id{
+        width: 1%;
+    }
+
+    #dni{
+        width:125px;
+    }
+    .dni{
+
+    }
+
+
+    #name{
+        float: right;
+        width:125px;
+
+        border: 0;
+    }
+    .name{
+
+    }
+    #surname{
+        float: left;
+        width:125px;
+
+        border: 0;
+    }
+
+    .classes{
+        width: 150px;
+        overflow: hidden;
+    }
+    #classes{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+</style>
+
+
+<body>
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <a class="navbar-brand" th:href="@{/}">Admin</a>
+
+    <div class="container-fluid">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" th:href="@{/admin/classes}">Classes table</a>
+            <a class="nav-item nav-link active" th:href="@{/admin/professors}">Professors table</a>
+        </div>
+        <form class="d-flex" th:action="@{/logout}" method="post">
+            <input class="btn btn-outline-light" type="submit" value="Sign Out">
+        </form>
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div ></div>
+    <h1 style="padding-top: 30px;">Professors</h1>
+
+    <hr>
+
+    <div class="table-responsive">
+<div class="table">
+    <div class="thead">
+        <div class="tr">
+            <div class="td">Id</div>
+            <div class="td">DNI</div>
+            <div class="td">Name</div>
+            <div class="td">Surname</div>
+            <div class="td" >Classes</div>
+            <div class="td">Operations</div>
+
+        </div>
+    </div>
+
+
+
+    <div class="tbody">
+
+        <form class="tr" th:action="@{/admin/professors/save}" method="post" th:object="${newProfessor}">
+
+            <div class="td id"><input       type="hidden"         readonly="readonly"                                                   th:value="*{id}" id="id" name="id"/></div>
+            <div class="td dni"><input      type="number"                                  required="required"  class="form-control"    th:value="*{dni}" id="dni" name="dni"/></div>
+
+            <div class="td name"><input     type="text"         placeholder="First name"   required="required"  class="form-control"    th:value="*{name}" id="name" name="name"/></div>
+            <div class="td surname"><input  type="text"         placeholder="Last name"    required="required"  class="form-control"    th:value="*{surname}" id="surname" name="surname"/></div>
+
+            <div class="td classes"></div>
+            <div class="td operations"><button disabled type="submit" class="btn btn-primary">New</button></div>
+
+        </form>
+
+        <th:block th:each="professor : ${professors}">
+        <form class="tr" th:action="@{/admin/professors/save}" method="post" th:object="${professor}">
+
+            <div class="td id"><input type="number"     th:value="*{id}"        required="required"  class="form-control"       id="id" name="id" readonly="readonly"/></div>
+            <div class="td dni"><input type="number"    th:value="*{dni}"       required="required"  class="form-control"       id="dni" name="dni"/></div>
+
+            <div class="td name"><input type="text"      th:value="*{name}"     required="required"  class="form-control"       id="name" name="name"/></div>
+            <div class="td surname"><input type="text"   th:value="*{surname}"  required="required"  class="form-control"       id="surname" name="surname"/></div>
+
+<!--            <input type="text"      th:value="*{assignedClasses}" id="assignedClasses" name="assignedClasses"/>-->
+<!--            <label th:text="${professor.getAssignedClasses().}"> </label>-->
+            <div style="overflow: hidden;"  class="td classes">
+                <th:block th:each="class : ${professor.getAssignedClasses()}">
+                    <a id="classes" th:text="${{class}}"></a>
+                </th:block>
+            </div>
+
+            <div class="td operations">
+                <button type="submit" class="btn btn-primary" disabled>Save</button>
+                <a class="btn btn-danger" th:href="@{'/admin/professors/delete/' + ${professor.getId()}}">Delete</a>
+            </div>
+        </form>
+        </th:block>
+    </div>
+
+</div>
+</div>
+</div>
+<script>
+
+    $(document).ready(function(){
+        $('form input').on('input change', function (e){
+            $(this).parent().parent().children().find('button').attr('disabled',false);
+        });
+    });
+
+</script>
+
+</body>
+</html>
+

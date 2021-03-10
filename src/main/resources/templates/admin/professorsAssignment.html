@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:replace="fragments/header.html :: headerfiles"></th:block>
+    <title>Professors</title>
+</head>
+
+<style>
+    #id{
+        width:3em;
+        border:0;
+        text-align:center;
+    }
+    .id{
+        width:1%;
+    }
+</style>
+
+
+<body>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <a class="navbar-brand" th:href="@{/}">Admin</a>
+
+    <div class="container-fluid">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" th:href="@{/admin/classes}">Classes table</a>
+            <a class="nav-item nav-link" th:href="@{/admin/professors}">Professors table</a>
+        </div>
+        <form class="d-flex" th:action="@{/logout}" method="post">
+            <input class="btn btn-outline-light" type="submit" value="Sign Out">
+        </form>
+    </div>
+
+</nav>
+
+
+
+<div class="container">
+
+    <div ></div>
+    <h1 style="padding-top: 30px;" th:text="'Classes - '+${classId}"></h1>
+
+    <hr>
+    <div class="table-responsive">
+        <div class="table">
+
+            <div class="thead">
+                <div class="tr">
+                    <div class="td id">Id</div>
+                    <div class="td name">Name</div>
+                    <div class="td classes" >Classes</div>
+                    <div class="td operations">Operations</div>
+
+                </div>
+            </div>
+
+            <div class="tbody">
+
+                <div class="tr">
+                    <div class="td id"></div>
+                    <div class="td name"></div>
+                    <div class="td classes"></div>
+                    <div class="td operations"><a class="btn btn-outline-danger" th:href="@{'/admin/classes/assign/' + ${classId} + '/0'}">Unassign</a></div>
+                </div>
+
+                <div class="tr" th:each="professor : ${professors}">
+                    <div class="td id"><input type="number" th:value="${professor.getId()}" class="form-control" id="id" readonly="readonly"/></div>
+                    <div class="td name" th:text="${professor.getName()}+' '+${professor.getSurname()}"></div>
+                    <div class="td classes" th:text="${{professor.getAssignedClasses()}}"></div>
+                    <div class="td operations"><a class="btn btn-primary" th:href="@{'/admin/classes/assign/' + ${classId} + '/' + ${professor.getId()}}">Assign</a></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+
+
+
+
+<!--<td><a >Unassign</a></td>-->
+<!--</tr>-->
+<!--<tr th:each="professor : ${professors}">-->
+<!--    <td th:text="${professor.getId()}"></td>-->
+<!--    <td th:text="${professor.getName() + ' ' + professor.getSurname()} "></td>-->
+<!--    <td th:text="${ professor.getAssignedClasses().size() > 0 ? professor.getAssignedClasses() : 'Inactive'}"></td>-->
+
+<!--    <td><a >Assign</a>-->
+
+<!-

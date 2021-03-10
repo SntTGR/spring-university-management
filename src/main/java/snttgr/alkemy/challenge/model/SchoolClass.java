@@ -83,6 +83,7 @@ public class SchoolClass {
     public List<Student> getEnrolledStudents() {
         return enrolledStudents;
     }
+    public Float getOccupancy() {return ((float)getTickets() / getMaxTickets()) * 100.0f; }
 
     public void setProfessor(Professor professor) {
         this.professor = professor;
@@ -99,6 +100,12 @@ public class SchoolClass {
     public void setMaxTickets(int maxTickets) {
         this.maxTickets = maxTickets;
     }
+
+
+    /*public String formatedEnrolledStudents(){
+
+    }*/
+
 
     public boolean isEnrolled(Long id){
         for (var student: getEnrolledStudents()) {

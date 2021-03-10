@@ -1,0 +1,44 @@
+
+
+:root{
+}
+
+.table
+{
+    display:table;
+    border-collapse:separate;
+    border-spacing:0;
+    width:100%;
+    white-space: nowrap;
+    margin:auto;
+
+}
+.thead
+{
+    display:table-header-group;
+    color:white;
+    font-weight:bold;
+    background-color: #336aa4;
+}
+.tbody
+{
+    display:table-row-group;
+}
+.tr
+{
+    display:table-row;
+}
+.td
+{
+    display:table-cell;
+    border:0 solid lightseagreen;
+    padding:4px;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.content{
+    display: inline-block;
+    vertical-align: top;
+}

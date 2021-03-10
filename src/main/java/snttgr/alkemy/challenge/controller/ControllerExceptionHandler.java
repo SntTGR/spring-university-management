@@ -16,6 +16,8 @@ public class ControllerExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
+    //TODO: Doesn't redirect to error page, research how to properly handle exceptions.
+
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidRequestException.class)
     public void InvalidRequestException(Exception exception) {

@@ -10,12 +10,10 @@ import java.util.List;
 @SpringBootApplication
 public class Application {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
-
-
 
 }

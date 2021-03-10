@@ -34,41 +34,23 @@ public class AdminController {
     @GetMapping("/classes")
     public String schoolClassesIndex(Model model){
 
+        model.addAttribute("newSchoolClass", new SchoolClass());
         model.addAttribute("classes", schoolClassService.findClasses());
-
-        return "adminClasses";
+        return "admin/classes";
     }
-
-
-    @GetMapping("/classes/add")
-    public String addClass(Model model){
-        model.addAttribute("operation", "Adding class");
-        SchoolClass schoolClass = new SchoolClass();
-        model.addAttribute("schoolClass", schoolClass);
-        return "adminClassRegister";
-    }
-
-    @GetMapping("/classes/edit/{classId}")
-    public String editClass(Model model, @PathVariable Long classId){
-        model.addAttribute("operation", "Edit class");
-        model.addAttribute("schoolClass", schoolClassService.findClassById(classId));
-
-        return "adminClassRegister";
-    }
-
 
     @PostMapping("/classes/save")
-    public String saveClass(@ModelAttribute("schoolClass") SchoolClass formSchoolClass) throws InvalidRequestException {
+    public String saveClass(@ModelAttribute("schoolClass") SchoolClass schoolClass) throws InvalidRequestException {
         //only validation check is if they are not blank and not null
-        if( formSchoolClass.getStartTime()  == null ||
-            formSchoolClass.getName()       == null ||
-            formSchoolClass.getName().isBlank()) throw new InvalidRequestException("School class invalid form");
+        if( schoolClass.getStartTime()  == null ||
+            schoolClass.getName()       == null ||
+            schoolClass.getName().isBlank()) throw new InvalidRequestException("School class invalid form");
 
-        if (formSchoolClass.getId() != null) {
-            formSchoolClass.setProfessor(schoolClassService.findClassById(formSchoolClass.getId()).getProfessor());
+        if (schoolClass.getId() != null) {
+            schoolClass.setProfessor(schoolClassService.findClassById(schoolClass.getId()).getProfessor());
         }
 
-        schoolClassService.save(formSchoolClass);
+        schoolClassService.save(schoolClass);
         return "redirect:/admin/classes";
     }
 
@@ -80,8 +62,9 @@ public class AdminController {
 
     @GetMapping("/classes/assign/{classId}")
     public String assignClass(@PathVariable Long classId, Model model){
+        model.addAttribute("classId",classId);
         model.addAttribute("professors", professorService.findAllProfessors());
-        return "adminProfessorsAssignment";
+        return "admin/professorsAssignment";
     }
 
     @GetMapping("/classes/assign/{classId}/{professorId}")
@@ -110,28 +93,11 @@ public class AdminController {
     @GetMapping("/professors")
     public String professorsIndex(Model model){
 
-
+        model.addAttribute("newProfessor", new Professor());
         model.addAttribute("professors", professorService.findAllProfessors());
 
-        return "adminProfessors";
+        return "admin/professors";
     }
-
-    @GetMapping("/professors/add")
-    public String addProfessor(Model model){
-        model.addAttribute("operation", "Adding professor");
-        Professor professor = new Professor();
-        model.addAttribute("professor", professor);
-        return "adminProfessorRegister";
-    }
-
-    @GetMapping("/professors/edit/{professorId}")
-    public String editProfessor(Model model, @PathVariable Long professorId){
-        model.addAttribute("operation", "Edit professor");
-        model.addAttribute(professorService.findById(professorId));
-
-        return "adminProfessorRegister";
-    }
-
 
 
     @PostMapping("/professors/save")
@@ -141,7 +107,8 @@ public class AdminController {
         if( formProfessor.getSurname()      == null ||
             formProfessor.getSurname().isBlank()    ||
             formProfessor.getName()         == null ||
-            formProfessor.getName().isBlank())
+            formProfessor.getName().isBlank()       ||
+            formProfessor.getDni() <= 0)
                 throw new InvalidRequestException("Professor invalid form");
 
 
@@ -149,7 +116,7 @@ public class AdminController {
             formProfessor.setAssignedClasses(professorService.findById(formProfessor.getId()).getAssignedClasses());
         }
 
-        //System.out.println(toSave + " - " + formProfessor);
+
 
         professorService.save(formProfessor);
 
